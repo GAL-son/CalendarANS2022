@@ -3,6 +3,16 @@ public class Date {
     private Month month;
     private int year;
 
+    final String[] daysOfWeek = {
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday", 
+        "Friday",
+        "Saturday",
+        "Sunday"
+    };
+
     public Date(int _day, int _month, int _year) throws RuntimeException
     {
         year = _year;
@@ -66,10 +76,19 @@ public class Date {
         return false;
     }
 
-    int getYear()
+    public int getYear()
     {
         return year;
     }
+
+    public int getMonth() {
+        return month.getMonth();
+    }
+
+    public int getDay() {
+        return day;
+    }
+
 
     public void nextYear()
     {
@@ -83,17 +102,26 @@ public class Date {
 
     public int dayOfWeek() {
         int dayOfWeek = 0;
-        int d = day;
+        int q = day;
         int m = month.getMonth();
+        m = (m<3) ? m+12 : m;
         int K = year%100;
         int J = year/100;
-        //System.out.println("DEBUG/ Day:" + d + "Month" + m + "YearCentury" + K + "Century" + J);
+        //System.out.println("DEBUG/ Day: " + q + " Month: " + m + " YearCentury: " + K + " Century: " + J);
 
-        dayOfWeek = (d + (13*(m+1))/ 5 + K + (K/4) + (J/4) + 2*J)%7;     
+         dayOfWeek = (q + ((13 * (m+1))/5) + K + (K/4) + (J/4) - (2*J) - 1)%7;
 
-        return ((dayOfWeek+5)%8)+1;
+        return  ((dayOfWeek+5)%7)+1;
     }
 
+    public String nameDayOfWeek()
+    {
+        return daysOfWeek[dayOfWeek()-1];
+    }
+
+
+
+    // Inner class Month
     private class Month {
         private int mon;
     
