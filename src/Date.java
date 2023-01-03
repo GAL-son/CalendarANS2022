@@ -28,35 +28,60 @@ public class Date {
     }
 
     public void daysForward(int numOfDaysForward)
-    {
-        day += numOfDaysForward;
-
-        int numDays = month.getNumberOfDays(isLeapYear());
-        if(day > numDays) {
-            day -= numDays;
-            try {
-                month.nextMonth();
-            } catch(Exception e)
-            {
-                nextYear();
+    {   
+        int moveDays = numOfDaysForward;
+        while (moveDays > 0) {
+            int add;
+            if(moveDays > month.getNumberOfDays(isLeapYear())) {
+                add = month.getNumberOfDays(isLeapYear());
+            } else {
+                add = moveDays;
             }
+        
+            day += add;
+
+            int numDays = month.getNumberOfDays(isLeapYear());
+            if(day > numDays) {
+                day -= numDays;
+                try {
+                    month.nextMonth();
+                } catch(Exception e)
+                {
+                    nextYear();
+                }
+            }
+
+            moveDays -= add;
         }
     }
 
     public void daysBackward(int numOfDaysBackward)
     {
-        day -= numOfDaysBackward;
-        if (day < 1)
-        {
-            try {
-                month.previousMonth();
-            } catch (Exception e)
-            {
-                PreviousYear();
-            }
 
-            day = month.getNumberOfDays(isLeapYear()) + day;
-        }        
+        int moveDays = numOfDaysBackward;
+        while (moveDays > 0) {
+            int sub;
+            if(moveDays > month.getNumberOfDays(isLeapYear())) {
+                sub = month.getNumberOfDays(isLeapYear());
+            } else {
+                sub = moveDays;
+            }
+        
+            day -= sub;
+            if (day < 1)
+            {
+                try {
+                    month.previousMonth();
+                } catch (Exception e)
+                {
+                    PreviousYear();
+                }
+
+                day = month.getNumberOfDays(isLeapYear()) + day;
+            }        
+
+            moveDays -= sub;
+        }
     }
 
     public void weekForward()
@@ -109,7 +134,7 @@ public class Date {
         int J = year/100;
         //System.out.println("DEBUG/ Day: " + q + " Month: " + m + " YearCentury: " + K + " Century: " + J);
 
-         dayOfWeek = (q + ((13 * (m+1))/5) + K + (K/4) + (J/4) - (2*J) - 1)%7;
+         dayOfWeek = (q + ((13 * (m+1))/5) + K + (K/4) + (J/4) - (2*J))%7;
 
         return  ((dayOfWeek+5)%7)+1;
     }
