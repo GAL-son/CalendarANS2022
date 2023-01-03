@@ -1,4 +1,4 @@
-public class Date {
+public class Date implements Comparable<Date> {
     private int day;
     private Month month;
     private int year;
@@ -96,8 +96,15 @@ public class Date {
 
     public boolean isLeapYear()
     {
-        if(year%4 == 0 && year%100 != 0) return true;
         if(year%400 == 0) return true;
+        if(year%4 == 0 && year%100 != 0) return true;
+        return false;
+    }
+
+    public static boolean isLeapYear(int year) {
+        
+        if(year%400 == 0) return true;
+        if(year%4 == 0 && year%100 != 0) return true;
         return false;
     }
 
@@ -144,6 +151,49 @@ public class Date {
         return daysOfWeek[dayOfWeek()-1];
     }
 
+    public int getDays()
+    {
+        int days = 0;
+        int baseYear = 1900;
+        Boolean moveUp = baseYear <= year;
+        int direction = (moveUp) ? 1:-1;
+
+        for(int i = baseYear + ((moveUp)? 0 : -1); i != year; i += direction) {
+            if(Date.isLeapYear(i)) days += direction * 366;
+                else days += direction * 365;
+        }
+
+        int startMonth = (moveUp) ? 1 : 12;
+        for(int i = startMonth; i != month.getMonth(); i += direction) {
+            days += Month.getNumberOfDays(i, isLeapYear());
+        }
+
+        if(moveUp) days+=day;
+        else days += month.getNumberOfDays(isLeapYear()) - day;
+
+        return days -1;     
+    }
+
+    public static int daysBetween(Date d1, Date d2) {
+        int days1 = d1.getDays();
+        int days2 = d2.getDays();
+        if(days1*days2 > 0) return Math.abs(days1-days2);
+        else return Math.abs(days1+days2);        
+    }
+
+    public boolean isEalier(Date compare) {
+        if(year != compare.getYear()) return year < compare.getYear();
+        if(month.getMonth() != compare.getMonth()) return month.getMonth() < compare.getMonth();
+        if(day != compare.getDay()) return day < compare.getDay();
+        return false;
+    }
+
+    @Override
+    public int compareTo(Date o) {
+        int multipier = (this.isEalier(o)) ? 1 : -1;
+        return multipier * daysBetween(this, o);
+    }
+
 
 
     // Inner class Month
@@ -165,7 +215,7 @@ public class Date {
             "December"
         };
     
-        final private int[] numOfDays = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        final static private int[] numOfDays = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     
         public Month(int _val) throws RuntimeException {
             if(_val > 12) throw new RuntimeException();
@@ -179,6 +229,11 @@ public class Date {
         public int getNumberOfDays(boolean isLeapYear) {
             if(isLeapYear && mon == 2) return 29;
             else return numOfDays[mon-1];
+        }
+
+        public static int getNumberOfDays(int month, boolean isLeapYear) {
+            if(isLeapYear && month == 2) return 29;
+            else return numOfDays[month-1];
         }
     
         public String toString() {
