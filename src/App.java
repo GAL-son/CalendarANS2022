@@ -1,11 +1,24 @@
 public class App {
     public static void main(String[] args) throws Exception {
-        Date d1 = new Date(9,1,2023);
-        for(int i = 1; i < 7; i++) {
-            System.out.println(d1 + "DAY OF WEEK: " + d1.dayOfWeek());
-            d1.daysForward(1);
-        }
-        
+        Date curr = new Date(9,1,2023);
+
+        for(int i = 1; i < 250; i++) {            
+            int next = 1;            
+            Date nextDate = new Date(curr.getDay(), curr.getMonth(), curr.getYear());
+            nextDate.daysForward(next);
+
+            System.out.print(curr + "-" + nextDate);
+            System.out.println(" " + curr.dayOfWeek() + "-" + nextDate.dayOfWeek());
+
+            int testDayWeek = (curr.dayOfWeek() + (next%7));
+            if(testDayWeek > 7 ) testDayWeek %= 7;
+
+            if(nextDate.dayOfWeek() != testDayWeek) {
+                System.out.println("ERROR" + nextDate.dayOfWeek() + "VS" + (curr.dayOfWeek() + (next%7)) + "\n");
+            }
+
+            curr.daysForward(next);
+        }    
 
         
     }
