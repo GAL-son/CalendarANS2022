@@ -81,6 +81,19 @@ public class Date {
         year--;
     }
 
+    public int dayOfWeek() {
+        int dayOfWeek = 0;
+        int d = day;
+        int m = month.getMonth();
+        int K = year%100;
+        int J = year/100;
+        //System.out.println("DEBUG/ Day:" + d + "Month" + m + "YearCentury" + K + "Century" + J);
+
+        dayOfWeek = (d + (13*(m+1))/ 5 + K + (K/4) + (J/4) + 2*J)%7;     
+
+        return ((dayOfWeek+5)%8)+1;
+    }
+
     private class Month {
         private int mon;
     
@@ -137,7 +150,7 @@ public class Date {
                 throw new YearException();
             }
             mon = temp;
-        }
+        }        
     
         private class YearException extends Exception
         {
