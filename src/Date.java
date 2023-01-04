@@ -25,7 +25,9 @@ public class Date implements Comparable<Date> {
         month = new Month(_month);
 
         if(_day > month.getNumberOfDays(isLeapYear())) throw new RuntimeException();
-        else day = _day;        
+        else day = _day;
+        
+        logToFile("Date Created");
     }
 
     public String toString()
@@ -35,6 +37,7 @@ public class Date implements Comparable<Date> {
 
     public void daysForward(int numOfDaysForward)
     {   
+        logToFile("Date moved forward by " + numOfDaysForward + " days");
         int moveDays = numOfDaysForward;
         while (moveDays > 0) {
             int add;
@@ -63,7 +66,7 @@ public class Date implements Comparable<Date> {
 
     public void daysBackward(int numOfDaysBackward)
     {
-
+        logToFile("Date moved backward by " + numOfDaysBackward + " days");
         int moveDays = numOfDaysBackward;
         while (moveDays > 0) {
             int sub;
@@ -223,23 +226,13 @@ public class Date implements Comparable<Date> {
             }
         }
 
-        if(firstSlash == secondSlash) throw new IOException("Invalid Format");
-
-
+        if(firstSlash == secondSlash) throw new IOException("Invalid Format");        
         
         String day = date.substring(0, firstSlash);
         String month = date.substring(firstSlash+1, secondSlash);
         String year = date.substring(secondSlash+1);
 
-        //System.out.println("DEBUG: " + date + "-" + day + "/" + month + "/" + year);
-        
-
-        
-
-        // for(int i = 0; i < year.length(); i++) {
-        //     if(i < 2 && (!Character.isDigit(day.charAt(i)) || !Character.isDigit(month.charAt(i)))) throw new IOException("Invalid format!");
-        //     if(!Character.isDigit(year.charAt(i))) throw new IOException("Invalid format!");
-        // }
+        logToFile("Date was set from file " + filePath);
 
         this.day = Integer.parseInt(day);
         this.month.mon = Integer.parseInt(month);
@@ -249,11 +242,26 @@ public class Date implements Comparable<Date> {
     public void saveToFile(String filePath) throws IOException {
         String date = this.toString();
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
-            bw.write(date, 0, date.length());
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+            bw.append(date);
             bw.newLine();
             bw.close();
         }
+
+        logToFile("Date was saved to file " + filePath);
+    }
+
+    private void logToFile(String message){
+        String logPath = "src/log.txt";
+        message = this.toString() + " - " +  message;
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(logPath, true))) {
+            bw.append(message + "\n");
+            bw.close();
+        } catch (IOException e) {
+
+        }
+        
     }
 
 

@@ -12,13 +12,6 @@ public class App {
 
         Date d2 = new Date(2, 2, 2);
         d2.setFromFile("src/text.txt");
-        System.out.println(d2);  
-
-        
-
-
-
-
-        
+        System.out.println(d2); 
     }
 }
