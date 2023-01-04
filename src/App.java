@@ -1,25 +1,18 @@
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        Date d0 = new Date(2,1,2023);
-        Date d1 = new Date(1, 1, 1000);
-        Date d2 = new Date(19, 3, 666);
+        Date d1 = new Date(1, 1, 1);
 
-        ArrayList<Date> list = new ArrayList<>();
-        list.add(d2);
-        list.add(d1);
-        list.add(d0);
+        d1.setFromFile("src/test.txt");
+        System.out.println(d1);      
+        d1.daysForward(12);
+        d1.saveToFile("src/text.txt");
 
-        System.out.println(list);
-
-        Collections.sort(list);
-
-        System.out.println(list);
-
-        
+        Date d2 = new Date(2, 2, 2);
+        d2.setFromFile("src/text.txt");
+        System.out.println(d2);  
 
         
 

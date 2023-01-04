@@ -1,3 +1,9 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class Date implements Comparable<Date> {
     private int day;
     private Month month;
@@ -192,6 +198,62 @@ public class Date implements Comparable<Date> {
     public int compareTo(Date o) {
         int multipier = (this.isEalier(o)) ? 1 : -1;
         return multipier * daysBetween(this, o);
+    }
+
+    public void setFromFile(String filePath) throws IOException {
+        String date = null;
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            date = br.readLine();
+            br.close();
+        }
+
+        if(date.isBlank()) throw new IOException("File empty!");
+        //if(date.length() != 10 || date.charAt(2) != '/' || date.charAt(5) != '/') throw new IOException("Invalid format!");
+
+        int firstSlash = -1;
+        int secondSlash = -1;
+
+        for(int i = 0; i < date.length(); i++) {
+            char curr = date.charAt(i);
+            if(!Character.isDigit(curr) && curr != '/') throw new IOException("Invalid Format!");
+
+            if(curr == '/') {
+                if(firstSlash == -1) firstSlash = i;
+                else secondSlash = i;
+            }
+        }
+
+        if(firstSlash == secondSlash) throw new IOException("Invalid Format");
+
+
+        
+        String day = date.substring(0, firstSlash);
+        String month = date.substring(firstSlash+1, secondSlash);
+        String year = date.substring(secondSlash+1);
+
+        //System.out.println("DEBUG: " + date + "-" + day + "/" + month + "/" + year);
+        
+
+        
+
+        // for(int i = 0; i < year.length(); i++) {
+        //     if(i < 2 && (!Character.isDigit(day.charAt(i)) || !Character.isDigit(month.charAt(i)))) throw new IOException("Invalid format!");
+        //     if(!Character.isDigit(year.charAt(i))) throw new IOException("Invalid format!");
+        // }
+
+        this.day = Integer.parseInt(day);
+        this.month.mon = Integer.parseInt(month);
+        this.year = Integer.parseInt(year);
+    }
+
+    public void saveToFile(String filePath) throws IOException {
+        String date = this.toString();
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+            bw.write(date, 0, date.length());
+            bw.newLine();
+            bw.close();
+        }
     }
 
 
