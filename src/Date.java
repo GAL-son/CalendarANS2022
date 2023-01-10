@@ -9,6 +9,11 @@ public class Date implements Comparable<Date> {
     private Month month;
     private int year;
 
+    static final int FORMAT_SHORT = 123;
+    static final int FORMAT_LONG = 124;
+    static final int FORMAT_ROMAN = 125;
+    static final int FORMAT_ABRR = 126;  
+
     final String[] daysOfWeek = {
         "Monday",
         "Tuesday",
@@ -33,6 +38,30 @@ public class Date implements Comparable<Date> {
     public String toString()
     {
         return day + "/" + month.getMonth() + "/" + year;
+    }
+
+    public String format(int format) {
+        String result = "";
+
+        switch (format) {
+            case FORMAT_SHORT:
+                result = day + " " + month.toString() + " " + year;
+                break;
+            case FORMAT_LONG:
+                result = daysOfWeek[dayOfWeek()] + ", " + day + " " + month.toString() + " " + year;
+                break;
+            case FORMAT_ROMAN:
+                result = ((day<10)?"0"+day:day) + "." + month.getRoman() + "." + year;
+                break;
+            case FORMAT_ABRR:
+                result = daysOfWeek[dayOfWeek()].substring(0,3) + ", " + day + "-" + month.toString().substring(0,3) + "-" + year;
+                break;
+            default:
+                result = toString();
+        }
+
+
+        return result;
     }
 
     public void daysForward(int numOfDaysForward)
@@ -284,6 +313,10 @@ public class Date implements Comparable<Date> {
             "November",
             "December"
         };
+
+        final private String[] roman = {
+            "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "XI", "X", "XI", "XII"
+        };
     
         final static private int[] numOfDays = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     
@@ -308,6 +341,10 @@ public class Date implements Comparable<Date> {
     
         public String toString() {
             return names[mon-1];
+        }
+
+        public String getRoman() {
+            return roman[mon-1];
         }
     
         public void nextMonth() throws YearException
