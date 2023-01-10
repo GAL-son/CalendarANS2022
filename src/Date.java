@@ -10,6 +10,7 @@ public class Date implements Comparable<Date> {
     private int year;
 
     // Finals
+    
     static final int FORMAT_SHORT = 123;
     static final int FORMAT_LONG = 124;
     static final int FORMAT_ROMAN = 125;
@@ -26,6 +27,14 @@ public class Date implements Comparable<Date> {
     };
 
     // Constructors
+
+    /**
+     * Base constructors tahes three parameters:
+     * @param _day month day number
+     * @param _month month number (1-12)
+     * @param _year year number
+     * @throws RuntimeException when _day is larger than max possible days in month
+     */
     public Date(int _day, int _month, int _year) throws RuntimeException
     {
         year = _year;
@@ -37,8 +46,17 @@ public class Date implements Comparable<Date> {
         logToFile("Date Created");
     }
 
-    public Date(String date) {
-
+    /**
+     * Constructor that creates form a string in format: dd/mm/yyyy or d/m/y.
+     * @param date String in fomrat <b>dd/mm/yyyy</b> or <b>d/m/y</b>.
+     * @throws RuntimeException
+     * @throws IOException
+     */
+    public Date(String date) throws RuntimeException, IOException {
+        Date tmp = parse(date);
+        this.day = tmp.day;
+        this.month = tmp.month;
+        this.year = tmp.year;
     }
 
     // Displaying 
@@ -77,6 +95,25 @@ public class Date implements Comparable<Date> {
     }
 
     // Modifying date
+    static public Date parse(String date) throws RuntimeException, IOException {
+
+        IOException eFormat = new IOException("Invalid format");
+
+        String[] frag = date.split("/", 3);
+        if(frag.length < 3) throw eFormat;
+        for (String string : frag) {
+            for(int i = 0; i < string.length(); i++) {
+                if(!Character.isDigit(string.charAt(i))) throw eFormat;
+            }
+        }
+
+        int _d = Integer.parseInt(frag[0]);
+        int _m = Integer.parseInt(frag[1]);
+        int _y = Integer.parseInt(frag[2]);
+
+        return new Date(_d, _m, _y);
+    }
+
     public void daysForward(int numOfDaysForward)
     {   
         logToFile("Date moved forward by " + numOfDaysForward + " days");
