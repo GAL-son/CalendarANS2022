@@ -9,12 +9,13 @@ public class Date implements Comparable<Date> {
     private Month month;
     private int year;
 
+    // Finals
     static final int FORMAT_SHORT = 123;
     static final int FORMAT_LONG = 124;
     static final int FORMAT_ROMAN = 125;
     static final int FORMAT_ABRR = 126;  
 
-    final String[] daysOfWeek = {
+    static final String[] daysOfWeek = {
         "Monday",
         "Tuesday",
         "Wednesday",
@@ -24,6 +25,7 @@ public class Date implements Comparable<Date> {
         "Sunday"
     };
 
+    // Constructors
     public Date(int _day, int _month, int _year) throws RuntimeException
     {
         year = _year;
@@ -34,6 +36,12 @@ public class Date implements Comparable<Date> {
         
         logToFile("Date Created");
     }
+
+    public Date(String date) {
+
+    }
+
+    // Displaying 
 
     public String toString()
     {
@@ -60,10 +68,15 @@ public class Date implements Comparable<Date> {
                 result = toString();
         }
 
-
         return result;
     }
 
+    public String nameDayOfWeek()
+    {
+        return daysOfWeek[dayOfWeek()-1];
+    }
+
+    // Modifying date
     public void daysForward(int numOfDaysForward)
     {   
         logToFile("Date moved forward by " + numOfDaysForward + " days");
@@ -132,6 +145,17 @@ public class Date implements Comparable<Date> {
         daysBackward(7);
     }
 
+    public void nextYear()
+    {
+        year++;
+    }
+
+    public void PreviousYear()
+    {
+        year--;
+    }
+
+    // date info getters
     public boolean isLeapYear()
     {
         if(year%400 == 0) return true;
@@ -157,18 +181,7 @@ public class Date implements Comparable<Date> {
 
     public int getDay() {
         return day;
-    }
-
-
-    public void nextYear()
-    {
-        year++;
-    }
-
-    public void PreviousYear()
-    {
-        year--;
-    }
+    }   
 
     public int dayOfWeek() {
         int dayOfWeek = 0;
@@ -184,12 +197,7 @@ public class Date implements Comparable<Date> {
         return  ((dayOfWeek+5)%7)+1;
     }
 
-    public String nameDayOfWeek()
-    {
-        return daysOfWeek[dayOfWeek()-1];
-    }
-
-    public int getDays()
+    private int getDays()
     {
         int days = 0;
         int baseYear = 1900;
@@ -212,6 +220,7 @@ public class Date implements Comparable<Date> {
         return days -1;     
     }
 
+    // Comparing dates
     public static int daysBetween(Date d1, Date d2) {
         int days1 = d1.getDays();
         int days2 = d2.getDays();
@@ -232,6 +241,7 @@ public class Date implements Comparable<Date> {
         return multipier * daysBetween(this, o);
     }
 
+    // Files 
     public void setFromFile(String filePath) throws IOException {
         String date = null;
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
