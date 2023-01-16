@@ -33,7 +33,7 @@ public class Date implements Comparable<Date> {
      * @param _day month day number
      * @param _month month number (1-12)
      * @param _year year number
-     * @throws RuntimeException when _day is larger than max possible days in month
+     * @throws RuntimeException when _day is larger than max possible days in month or month is larger than 12
      */
     public Date(int _day, int _month, int _year) throws RuntimeException
     {
@@ -47,10 +47,10 @@ public class Date implements Comparable<Date> {
     }
 
     /**
-     * Constructor that creates form a string in format: dd/mm/yyyy or d/m/y.
+     * Constructor that creates form a string.
      * @param date String in fomrat <b>dd/mm/yyyy</b> or <b>d/m/y</b>.
-     * @throws RuntimeException
-     * @throws IOException
+     * @throws RuntimeException when day number exceeds maximum number of days in given month or number of month is larger than 12
+     * @throws IOException when given string is in invaid format
      */
     public Date(String date) throws RuntimeException, IOException {
         Date tmp = parse(date);
@@ -66,6 +66,11 @@ public class Date implements Comparable<Date> {
         return day + "/" + month.getMonth() + "/" + year;
     }
 
+    /**
+     * Returns date in given format
+     * @param format format constant
+     * @return String date in given format
+     */
     public String format(int format) {
         String result = "";
 
@@ -89,12 +94,24 @@ public class Date implements Comparable<Date> {
         return result;
     }
 
-    public String nameDayOfWeek()
+    /**
+     * Returns name of week day
+     * @return string containing week day name
+     */
+    public String getnameDayOfWeek()
     {
         return daysOfWeek[dayOfWeek()-1];
     }
 
     // Modifying date
+
+    /**
+     * Parses string argument to Date object
+     * @param date Date in format <b>dd/mm/yyyy</b> or <b>d/m/y</b>.
+     * @return returns a Date object
+     * @throws RuntimeException when date cannot be created (see: {@link #Date(int, int, int)})
+     * @throws IOException when given string is invalid format
+     */
     static public Date parse(String date) throws RuntimeException, IOException {
 
         IOException eFormat = new IOException("Invalid format");
@@ -114,6 +131,10 @@ public class Date implements Comparable<Date> {
         return new Date(_d, _m, _y);
     }
 
+    /**
+     * Moves date numOfDaysForward days forward
+     * @param numOfDaysForward number of days to increase Date
+     */
     public void daysForward(int numOfDaysForward)
     {   
         logToFile("Date moved forward by " + numOfDaysForward + " days");
@@ -143,6 +164,10 @@ public class Date implements Comparable<Date> {
         }
     }
 
+    /**
+     * Moves date numOfDaysForward days forward
+     * @param numOfDaysBackward number of days to increase Date
+     */
     public void daysBackward(int numOfDaysBackward)
     {
         logToFile("Date moved backward by " + numOfDaysBackward + " days");
@@ -172,27 +197,44 @@ public class Date implements Comparable<Date> {
         }
     }
 
+    /**
+     * Increased date by 7 days
+     */
     public void weekForward()
     {
         daysForward(7);
     }
 
+    /**
+     * Decreases date by 7 days
+     */
     public void weekBackward()
     {
         daysBackward(7);
     }
 
+    /**
+     * Increases year by one
+     */
     public void nextYear()
     {
         year++;
     }
 
+    /**
+     * Decreases date by one 
+     */
     public void PreviousYear()
     {
         year--;
     }
 
     // date info getters
+
+    /**
+     * Checks if current year is leap
+     * @return true if is leap year
+     */
     public boolean isLeapYear()
     {
         if(year%400 == 0) return true;
@@ -200,6 +242,11 @@ public class Date implements Comparable<Date> {
         return false;
     }
 
+    /**
+     * Checks is given year is leap
+     * @param year intiger value of year
+     * @return true if is leap year
+     */
     public static boolean isLeapYear(int year) {
         
         if(year%400 == 0) return true;
@@ -207,19 +254,35 @@ public class Date implements Comparable<Date> {
         return false;
     }
 
+    /**
+     * Returns current year
+     * @return year
+     */
     public int getYear()
     {
         return year;
     }
 
+    /**
+     * Returns intiger value of current month
+     * @return month
+     */
     public int getMonth() {
         return month.getMonth();
     }
 
+    /**
+     * Returns current day
+     * @return day
+     */
     public int getDay() {
         return day;
     }   
 
+    /**
+     * Returns intiger value of day of week <b>1-Monday, ... , 7-Sunday</b>
+     * @return day of week
+     */
     public int dayOfWeek() {
         int dayOfWeek = 0;
         int q = day;
@@ -234,6 +297,10 @@ public class Date implements Comparable<Date> {
         return  ((dayOfWeek+5)%7)+1;
     }
 
+    /**
+     * Returns number of days from 01-01-1900
+     * @return int number of days
+     */
     private int getDays()
     {
         int days = 0;
@@ -258,6 +325,12 @@ public class Date implements Comparable<Date> {
     }
 
     // Comparing dates
+    /**
+     * Returns number of days between two given dates
+     * @param d1 Date 1
+     * @param d2 Date 2
+     * @return Number of days between
+     */
     public static int daysBetween(Date d1, Date d2) {
         int days1 = d1.getDays();
         int days2 = d2.getDays();
@@ -265,6 +338,11 @@ public class Date implements Comparable<Date> {
         else return Math.abs(days1+days2);        
     }
 
+    /**
+     * Determines if current date is ealier than diven date
+     * @param compare date to be compared with
+     * @return true if current date is larger than compare date, false if compare is ealier
+     */
     public boolean isEalier(Date compare) {
         if(year != compare.getYear()) return year < compare.getYear();
         if(month.getMonth() != compare.getMonth()) return month.getMonth() < compare.getMonth();
@@ -279,6 +357,11 @@ public class Date implements Comparable<Date> {
     }
 
     // Files 
+    /**
+     * Sets date from file in format "D/M/Y or DD/MM/YYYY"
+     * @param filePath path to file 
+     * @throws IOException if file does not exist of format is invalid
+     */
     public void setFromFile(String filePath) throws IOException {
         String date = null;
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -315,6 +398,11 @@ public class Date implements Comparable<Date> {
         this.year = Integer.parseInt(year);
     }
 
+    /**
+     * Saves date to file in basic format {@link #toString()}
+     * @param filePath path to file
+     * @throws IOException  if file does not exist of format is invalid
+     */
     public void saveToFile(String filePath) throws IOException {
         String date = this.toString();
 
@@ -327,6 +415,10 @@ public class Date implements Comparable<Date> {
         logToFile("Date was saved to file " + filePath);
     }
 
+    /**
+     * Logs any date changes file log.txt
+     * @param message
+     */
     private void logToFile(String message){
         String logPath = "src/log.txt";
         message = this.toString() + " - " +  message;
@@ -343,6 +435,9 @@ public class Date implements Comparable<Date> {
 
 
     // Inner class Month
+    /**
+     * Inner class month 
+     */
     private class Month {
         private int mon;
     
@@ -367,20 +462,40 @@ public class Date implements Comparable<Date> {
     
         final static private int[] numOfDays = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     
+        /**
+         * Creates new mont from intiger
+         * @param _val intiger value of month (1-January, ..., 12-December)
+         * @throws RuntimeException if given _val is greater than 12
+         */
         public Month(int _val) throws RuntimeException {
-            if(_val > 12) throw new RuntimeException();
+            if(_val > 12 || _val < 1) throw new RuntimeException("Invalid month");
             mon = _val;
         }
-    
+
+        /**
+         * Returns intiger value of this month
+         * @return int month
+         */
         public int getMonth() {
             return this.mon;
         }
     
+        /**
+         * Returns number of days in this month
+         * @param isLeapYear boolan value current year is a leap year
+         * @return number of days in month
+         */
         public int getNumberOfDays(boolean isLeapYear) {
             if(isLeapYear && mon == 2) return 29;
             else return numOfDays[mon-1];
         }
 
+        /**
+         * Returns number of days in given month
+         * @param month intiger value of month
+         * @param isLeapYear  boolan value current year is a leap year
+         * @return number of days in month
+         */
         public static int getNumberOfDays(int month, boolean isLeapYear) {
             if(isLeapYear && month == 2) return 29;
             else return numOfDays[month-1];
@@ -390,10 +505,18 @@ public class Date implements Comparable<Date> {
             return names[mon-1];
         }
 
+        /**
+         * Returns string name of month in roman 
+         * @return
+         */
         public String getRoman() {
             return roman[mon-1];
         }
     
+        /**
+         * Moves month one forward 
+         * @throws YearException if date should go to next year
+         */
         public void nextMonth() throws YearException
         {
             int temp = mon+1;
@@ -404,6 +527,10 @@ public class Date implements Comparable<Date> {
             mon = temp;
         }
     
+        /**
+         * Moves mont one backward
+         * @throws YearException if date dhoud go to previous year
+         */
         public void previousMonth() throws YearException
         {
             int temp = mon-1;
